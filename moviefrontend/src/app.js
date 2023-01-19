@@ -1,8 +1,12 @@
 import React from "react";
-import Navbar from "./components/user/Navbar";
+import { RouterProvider } from "react-router-dom";
+import router from "./router";
 
-function app() {
-  return <Navbar />;
+
+function App() {
+  return <>
+  <RouterProvider router ={router}/>
+  </>
 }
 
-export default app;
+export default App;

@@ -1,10 +1,12 @@
 
 import { createBrowserRouter } from "react-router-dom";
-import Home from "./components/Home";
-import Login from "./components/auth/Login";
+import Home from "./components/pages/Home";
 import Signin from "./components/auth/Signin";
 import Signup from './components/auth/Signup'
-  
+import EmailVerification from "./components/auth/Emailverification";
+import ForgetPassword from "./components/auth/ForgetPassword";
+import ConfirmPassword from "./components/auth/ConfirmPassword";
+  import Auth from './components/pages/Auth'
 const router = createBrowserRouter([
     {
       path: "/",
@@ -12,7 +14,7 @@ const router = createBrowserRouter([
     },
     {
       path: "/auth",
-      element: <Login />,
+      element: <Auth />,
       children: [
         {
           path: "signin",
@@ -21,6 +23,18 @@ const router = createBrowserRouter([
         {
           path: "signup",
           element:<Signup />
+        },
+        {
+          path: "emailVerification",
+          element:<EmailVerification />
+        },
+        {
+          path: "forgetPassword",
+          element: <ForgetPassword />
+        },
+        {
+          path: "confirmPassword",
+          element: <ConfirmPassword />
         },
       ],
     },

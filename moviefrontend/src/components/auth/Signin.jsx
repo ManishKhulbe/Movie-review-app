@@ -3,9 +3,7 @@ import Container from "../Container";
 import FormInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from '../form/Title'
-import {
-    Link,
-  } from "react-router-dom";
+import CustomLink from "../CustomLink";
 const Signin = () => {
   return (
     <div className="fixed inset-0 bg-primary -z-10 flex justify-center items-center ">
@@ -16,9 +14,8 @@ const Signin = () => {
           <FormInput name="password" label="Password" placeholder="*********"  />
         <Submit value="Sign in" />
         <div className="flex justify-between">
-            
-            <Link className="text-dark-subtle hover:text-white transition" to="#"> Forget Password</Link>
-            <Link className="text-dark-subtle hover:text-white transition" to="/auth/signup" > Sign Up </Link>
+            <CustomLink  to="/auth/forgetPassword" >forget password </CustomLink>
+            <CustomLink  to="/auth/signup" >Sign Up</CustomLink> 
         </div>
         </form>
       </Container>

@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
+import { commonModalClasses } from "../../utils/theme";
 import Container from "../Container";
+import FormContainer from "../form/FormContainer";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
 const OTP_LEN = 6;
@@ -35,8 +37,6 @@ const EmailVerification = () => {
   }
 
   // function handleKeyDown({ key }, index) {
-  //   newOtp[index] = value.substring(value.length - 1, value.length);
-  //   console.log(index,"vv")
   //   currentOTPIndex = index;
   //   if (key === "Backspace") {
   //     focusPrevInputField(currentOTPIndex);
@@ -48,12 +48,12 @@ const EmailVerification = () => {
   }, [activeOtpIndex]);
 
   return (
-    <div className="fixed inset-0 bg-primary -z-10 flex justify-center items-center ">
+    <FormContainer>
       <Container>
-        <form className="bg-secondary rounded p-6  space-y-6">
+        <form className={commonModalClasses}>
           <div>
             <Title>Please Enter teh OTP to verify the account </Title>
-            <p className="text-center text-dark-subtle">
+            <p className="text-center dark:text-dark-subtle text-light-subtle">
               Otp has been sent to your Email
             </p>
           </div>
@@ -67,7 +67,7 @@ const EmailVerification = () => {
                   onChange={(e) => handleOtpChange(e, index)}
                   // onKeyDown={(e) => handleKeyDown(e, index)}
                   type="number"
-                  className="w-12 h-12 border-2  border-dark-subtle focus:border-white rounded bg-transparent text-center outline-none font-semibold text-xl "
+                  className="w-12 h-12 border-2  dark:border-dark-subtle border-light-subtle dark:focus:border-white  focus:border-primary rounded bg-transparent text-center outline-none font-semibold text-xl "
                 />
               );
             })}
@@ -76,7 +76,7 @@ const EmailVerification = () => {
           <Submit value="Verify Account" />
         </form>
       </Container>
-    </div>
+    </FormContainer>
   );
 };
 

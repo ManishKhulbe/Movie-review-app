@@ -1,17 +1,15 @@
 import React from "react";
 import { RouterProvider } from "react-router-dom";
-import NotificationProvider from "./components/context/NotificationProvider";
-import ThemeProvider from "./components/context/themeProvider";
+import { ContextProviders } from "./components/context";
+
 import router from "./router";
 
 function App() {
   return (
     <>
-      <NotificationProvider>
-        <ThemeProvider>
-          <RouterProvider router={router} />
-        </ThemeProvider>
-      </NotificationProvider>
+      <ContextProviders>
+        <RouterProvider router={router} />
+      </ContextProviders>
     </>
   );
 }

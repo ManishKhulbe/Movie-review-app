@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Container from "../Container";
 import FormInput from "../form/FormInput";
 import Submit from "../form/Submit";
@@ -8,7 +8,7 @@ import { commonModalClasses } from "../../utils/theme";
 import FormContainer from "../form/FormContainer";
 import { createUser } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
-import { useNotification } from "../hooks";
+import { useNotification, useAuth } from "../hooks";
 
 const validateUserInfo = ({ name, email, password }) => {
   if (!name.trim()) return { status: false, error: "name is missing" };
@@ -32,7 +32,8 @@ const Signup = () => {
     password: "",
   });
   const navigate = useNavigate();
-
+  const {  authInfo}= useAuth()
+  const {  isLoggedIn } = authInfo
   const {updateNotification} = useNotification()
   const handleChange = ({ target }) => {
     let { name, value } = target;
@@ -53,6 +54,12 @@ const Signup = () => {
  
   };
   let { email, name, password } = userInfo;
+
+
+  useEffect(()=>{
+    if(isLoggedIn) navigate('/')
+    // eslint-disable-next-line
+  },[isLoggedIn])
   return (
     <FormContainer>
       <Container>

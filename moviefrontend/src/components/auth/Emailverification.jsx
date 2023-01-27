@@ -7,10 +7,10 @@ import Submit from "../form/Submit";
 import Title from "../form/Title";
 import { useLocation, useNavigate } from "react-router-dom";
 import { verifyUserEmail } from "../../api/auth";
-import { useNotification } from "../hooks";
+import { useAuth, useNotification } from "../hooks";
 const OTP_LEN = 6;
 
-function isValidOTP  (otp) {
+function isValidOTP(otp) {
   let isValid = false;
   for (let val of otp) {
     isValid = !isNaN(parseInt(val));
@@ -23,10 +23,11 @@ const EmailVerification = () => {
   const [otp, setotp] = useState(new Array(OTP_LEN).fill(""));
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
   const inputRef = useRef();
-
+  const { isAuth, authInfo } = useAuth();
+  const { isLoggedIn } = authInfo;
   const { state } = useLocation();
   const navigate = useNavigate();
-  const {updateNotification} = useNotification()
+  const { updateNotification } = useNotification();
   const user = state?.user;
   const focusNextInputField = (index) => {
     setActiveOtpIndex(index + 1);
@@ -62,17 +63,23 @@ const EmailVerification = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!isValidOTP(otp)) {
-      return console.log("invalid OTP");
+      return updateNotification("error", "invalid OTP");
     }
-    const { error, message } = await verifyUserEmail({
+    const {
+      error,
+      message,
+      user: userResponse,
+    } = await verifyUserEmail({
       OTP: otp.join(""),
       userId: user.id,
     });
-    if (error) return updateNotification("error",error);
+    if (error) return updateNotification("error", error);
 
-    updateNotification("success",message);
+    updateNotification("success", message);
+    localStorage.setItem("auth-token", userResponse.token);
+    isAuth();
   };
   useEffect(() => {
     inputRef.current?.focus();
@@ -80,8 +87,9 @@ const EmailVerification = () => {
 
   useEffect(() => {
     if (!user) navigate("/not-found");
+    if (isLoggedIn) navigate("/");
     //eslint-disable-next-line
-  }, [user]);
+  }, [user, isLoggedIn]);
   return (
     <FormContainer>
       <Container>

@@ -53,3 +53,54 @@ export const getIsAuth = async (token) => {
     return { error: error.message || error };
   }
 };
+export const forgetPassword = async (email) => {
+  try {
+    const { data } = await client.post("/user/forgetPassword", {
+    email
+    });
+    return data;
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return response.data;
+
+    return { error: error.message || error };
+  }
+};
+export const verifyPassResetToken = async (token, userId) => {
+  try {
+    const { data } = await client.post("/user/verifyPassResetToken", {
+    token , userId
+    });
+    return data;
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return response.data;
+
+    return { error: error.message || error };
+  }
+};
+export const resetPassword = async (passwordInfo) => {
+  try {
+    const { data } = await client.post("/user/resetPassword", passwordInfo);
+    return data;
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return response.data;
+
+    return { error: error.message || error };
+  }
+};
+
+export const reSendEmailVerificationToken = async (userId) => {
+  try {
+    const { data } = await client.post("/user/resentVerifyEmailToken", {userId});
+    return data;
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return response.data;
+
+    return { error: error.message || error };
+  }
+};
+
+

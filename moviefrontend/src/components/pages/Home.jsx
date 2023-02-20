@@ -1,15 +1,16 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import Navbar from '../user/Navbar'
+import React from "react";
+import NotVerified from "../user/NotVerified";
+import Navbar from "../user/Navbar";
+
 
 const Home = () => {
   return (
-    <div>
+  <div>
      <Navbar />
-     <Outlet />
- 
-    </div>
-  )
-}
+     <NotVerified />
 
-export default Home
+  </div>
+);
+};
+
+export default Home;

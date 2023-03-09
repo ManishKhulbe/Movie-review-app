@@ -6,9 +6,12 @@ import { BsFillSunFill } from "react-icons/bs";
 import { useRef } from "react";
 import { useTheme } from "../hooks";
 
-const Header = () => {
+
+const Header = ({onAddMovieClick , onAddActorClick}) => {
   const [showOptions, setShowOptions] = useState(false);
-  const {toggleTheme} = useTheme()
+  const { toggleTheme } = useTheme();
+  const options = [{title : "Add Movie" , onClick : onAddMovieClick },
+  {title : "Add Actor" , onClick : onAddActorClick }];
 
   return (
     <div className="flex items-center justify-between relative ">
@@ -18,7 +21,10 @@ const Header = () => {
         placeholder="search movies..."
       />
       <div className="flex items-center space-x-3">
-        <button onClick={toggleTheme} className="dark:text-white text-light-subtle ">
+        <button
+          onClick={toggleTheme}
+          className="dark:text-white text-light-subtle "
+        >
           <BsFillSunFill size={24} />{" "}
         </button>
         <button
@@ -34,12 +40,13 @@ const Header = () => {
       <CreateOptions
         visible={showOptions}
         onClose={() => setShowOptions(false)}
+        options={options}
       />
     </div>
   );
 };
 
-const CreateOptions = ({ visible, onClose }) => {
+const CreateOptions = ({ options, visible, onClose }) => {
   const container = useRef();
   const containerId = "option-container";
   useEffect(() => {
@@ -72,8 +79,9 @@ const CreateOptions = ({ visible, onClose }) => {
       className="absolute right-0 top-12 flex flex-col space-y-5 p-5 dark:bg-secondary bg-white drop-shadow-lg rounded animate-scale"
       onAnimationEnd={handleAnimationEnd}
     >
-      <Option>Add Movie</Option>
-      <Option>Add Actor</Option>
+      {options.map((title, onClick) => {
+        return <Option onClick={onClick}>{title} </Option>;
+      })}
     </div>
   );
 };

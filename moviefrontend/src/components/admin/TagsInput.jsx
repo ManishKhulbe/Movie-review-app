@@ -1,4 +1,4 @@
-import React,{useRef} from "react";
+import React, { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
@@ -6,8 +6,8 @@ import { AiOutlineClose } from "react-icons/ai";
 const TagsInput = () => {
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState([]);
-  const input = useRef()
-  const tagsInput = useRef()
+  const input = useRef();
+  const tagsInput = useRef();
   const handleOnChange = ({ target }) => {
     const { value } = target;
     if (value !== ",") setTag(value);
@@ -27,36 +27,61 @@ const TagsInput = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     input.current.scrollIntoView();
-  },[tag])
+  }, [tag]);
 
-  const removeTag =(tagToRemove) => {
-    console.log("🚀 ~ file: TagsInput.jsx:28 ~ removeTag ~ tagToRemove:", tagToRemove)
-    const tagIndex = tags.indexOf(tagToRemove)
-    tags.splice(tagIndex , 1)
-    setTags([...tags])
-  }
+  const removeTag = (tagToRemove) => {
+    console.log(
+      "🚀 ~ file: TagsInput.jsx:28 ~ removeTag ~ tagToRemove:",
+      tagToRemove
+    );
+    const tagIndex = tags.indexOf(tagToRemove);
+    tags.splice(tagIndex, 1);
+    setTags([...tags]);
+  };
 
+  const handleOnFocus = () => {
+    tagsInput.current.classList.remove(
+      "dark:border-dark-subtle",
+      "border-light-subtle"
+    );
+    tagsInput.current.classList.add(
+      "dark:border-white",
+      "border-primary"
+    );
+  };
+  const handleOnBlur = () => {
+    tagsInput.current.classList.add(
+      "dark:border-dark-subtle",
+      "border-light-subtle"
+    );
+    tagsInput.current.classList.remove(
+      "dark:border-white",
+      "border-primary"
+    ); 
+  };
   return (
     <div>
       <div
         ref={tagsInput}
         onKeyDown={handleKeyDown}
-        className=" border-2 bg-transparent dark:border-dark-subtle border-light-subtle px-2 h-10 rounded w-full text-white flex items-center space-x-2 overflow-x-auto custom-scroll-bar"
+        className=" border-2 bg-transparent dark:border-dark-subtle border-light-subtle px-2 h-10 rounded w-full text-white flex items-center space-x-2 overflow-x-auto custom-scroll-bar transition"
       >
         {tags.map((t) => (
-          <Tag onClick={()=> removeTag(t) } key={t}>{t}</Tag>
+          <Tag onClick={() => removeTag(t)} key={t}>
+            {t}
+          </Tag>
         ))}
         <input
-        ref={input}
+          ref={input}
           type="text"
           className="h-full flex-grow bg-transparent outline-none dark:text-white text-primary"
           placeholder=" tag one ,tag two..."
           value={tag}
           onChange={handleOnChange}
-        //   onFocus={handleOnFocus}
-        //   onBlur={handleOnBlur}
+          onFocus={handleOnFocus}
+          onBlur={handleOnBlur}
         />
       </div>
     </div>

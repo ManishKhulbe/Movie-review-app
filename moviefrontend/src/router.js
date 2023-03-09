@@ -7,6 +7,9 @@ import ForgetPassword from "./components/auth/ForgetPassword";
 import ConfirmPassword from "./components/auth/ConfirmPassword";
 import Auth from "./components/pages/Auth";
 import NotFound from "./components/NotFound";
+
+
+
 const router = createBrowserRouter([
   {
     path: "/",

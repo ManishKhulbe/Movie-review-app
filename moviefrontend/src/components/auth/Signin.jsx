@@ -1,4 +1,4 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState  } from "react";
 import Container from "../Container";
 import FormInput from "../form/FormInput";
 import Submit from "../form/Submit";
@@ -28,7 +28,7 @@ const Signin = () => {
   });
   const {updateNotification} = useNotification()
   const {handleLogin , authInfo}=useAuth()
-  const {isPending , isLoggedIn } = authInfo
+  const {isPending  } = authInfo
   const handleChange = ({ target }) => {
     let { name, value } = target;
     setUserInfo({ ...userInfo, [name]: value });
@@ -42,13 +42,16 @@ const navigate = useNavigate()
     if (!status) return updateNotification("error" , error);
     
     handleLogin(userInfo.email, userInfo.password)
+
+    navigate('/')
   };
 
 
-  useEffect(()=>{
-    if(isLoggedIn) navigate('/')
-    // eslint-disable-next-line
-  },[isLoggedIn])
+  // useEffect(()=>{
+  //   if(isLoggedIn) navigate('/')
+  //   // eslint-disable-next-line
+  // },[isLoggedIn])
+
   return (
     <div className="fixed inset-0 dark:bg-primary bg-white -z-10 flex justify-center items-center ">
       <Container>

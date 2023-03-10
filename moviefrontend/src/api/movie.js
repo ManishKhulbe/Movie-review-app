@@ -4,7 +4,7 @@ import client from "./client"
 export const uploadTrailer = async (formData , onUploadProgress)=>{
     const token = localStorage.getItem('auth-token')
     try {
-        const { data } = await client.get("/movie/upload_trailer", formData,{
+        const { data } = await client.post("/movie/upload_trailer", formData,{
             headers :{
                 authorization : 'Bearer '+token,
                 'content-type' : 'multipart/form-data'

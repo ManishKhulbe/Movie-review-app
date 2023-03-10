@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
-const TagsInput = () => {
+const TagsInput = ({name , onChange}) => {
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState([]);
   const input = useRef();
@@ -18,6 +18,7 @@ const TagsInput = () => {
       if (tags.includes(tag)) return setTag("");
       setTags([...tags, tag]);
       setTag("");
+      
     }
     if (key === "Backspace" && tags.length && !tag) {
       //   const newTags =  tags.filter((_,index)=> index!== tags.length-1)
@@ -30,12 +31,12 @@ const TagsInput = () => {
   useEffect(() => {
     input.current.scrollIntoView();
   }, [tag]);
+  
+  useEffect(()=>{
+    onChange(tags)
+  },[tags ]);
 
   const removeTag = (tagToRemove) => {
-    console.log(
-      "🚀 ~ file: TagsInput.jsx:28 ~ removeTag ~ tagToRemove:",
-      tagToRemove
-    );
     const tagIndex = tags.indexOf(tagToRemove);
     tags.splice(tagIndex, 1);
     setTags([...tags]);
@@ -61,6 +62,7 @@ const TagsInput = () => {
       "border-primary"
     ); 
   };
+
   return (
     <div>
       <div

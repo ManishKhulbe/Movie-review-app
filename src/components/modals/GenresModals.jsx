@@ -1,10 +1,11 @@
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { genres } from "../../utils/genres";
 import Submit from "../form/Submit";
 import ModalContainer from "./ModalContainer";
 
-const GenresModals = ({ visible, onClose, onSubmit }) => {
+const GenresModals = ({ previousSelection ,visible, onClose, onSubmit }) => {
   const [selectedGenres, setSelectedGenres] = useState([]);
   const handleGenresSelector = (gen) => {
     let newGenres = [];
@@ -17,13 +18,18 @@ const GenresModals = ({ visible, onClose, onSubmit }) => {
     setSelectedGenres([...newGenres]);
   };
 
+  useEffect(()=>{
+    setSelectedGenres(previousSelection);
+    // eslint-disable-next-line
+  },[])
+
   const handleSubmit =()=>{
     onSubmit(selectedGenres)
     onClose()
   }
 
   const handleClose=()=>{
-    setSelectedGenres([])
+    setSelectedGenres(previousSelection)
     onClose()
   }
   return (

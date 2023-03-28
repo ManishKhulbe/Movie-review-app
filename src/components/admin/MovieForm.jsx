@@ -219,7 +219,6 @@ const MovieForm = () => {
           <PosterSelector name='poster'  onChange={handleChange}  selectedPoster={selectedPosterForUI} accept='image/jpg , image/jpeg , image/png'/>
           <GenresSelector badge={genres.length} onClick={displayGenresModal}>Select Genres</GenresSelector>
         </div>
-        
       </div>
       <WriterModals
         onClose={hideWritersModal}
@@ -233,7 +232,7 @@ const MovieForm = () => {
         visible={showCastModal}
         onRemoveClick={handleCastRemove}
       />
-      <GenresModals  onSubmit={updateGenres} visible={showGenresModal} onClose={hideGenresModal}/>
+      <GenresModals  onSubmit={updateGenres} visible={showGenresModal} onClose={hideGenresModal} previousSelection={genres}/>
     </>
   );
 };

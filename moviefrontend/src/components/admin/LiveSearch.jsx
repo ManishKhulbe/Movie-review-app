@@ -6,16 +6,16 @@ import { useState } from "react";
 import { commonInputClasses } from "../../utils/theme";
 
 const LiveSearch = ({
-  results=[],
+  results = [],
   selectedResultStyle,
   resultContainerStyle,
   inputStyle,
-  renderItem=null,
-  value="",
-  name='',
-  onChange=null,
-  placeholder="",
-  onSelect=null,
+  renderItem = null,
+  value = "",
+  name = "",
+  onChange = null,
+  placeholder = "",
+  onSelect = null,
 }) => {
   const [displaySearch, setDisplaySearch] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -23,12 +23,17 @@ const LiveSearch = ({
     if (results.length) setDisplaySearch(true);
   };
   const handleOnBlur = () => {
+    setTimeout(()=>{closeSearch()},100)
+  };
+  const closeSearch = () => {
     setDisplaySearch(false);
     setFocusedIndex(-1);
   };
-
   const handleSelection = (selectedItem) => {
-    onSelect(selectedItem);
+    if (selectedItem) {
+      onSelect(selectedItem);
+      closeSearch();
+    }
   };
   const handleKeyDown = ({ key }) => {
     console.log(key, "bb");
@@ -43,6 +48,9 @@ const LiveSearch = ({
     }
     if (key === "Enter") {
       return handleSelection(results[focusedIndex]);
+    }
+    if (key === "Escape") {
+      return closeSearch();
     }
     setFocusedIndex(nextCount);
   };
@@ -80,7 +88,6 @@ const LiveSearch = ({
   );
 };
 
-
 const SearchResults = ({
   visible,
   results = [],
@@ -116,8 +123,8 @@ const SearchResults = ({
             selectedResultStyle={
               index === focusedIndex ? getSelectedClass() : ""
             }
-            onMouseDown={()=>onSelect(result)}
-            onClick={()=>onSelect(result)}
+            onMouseDown={() => onSelect(result)}
+            onClick={() => onSelect(result)}
           />
         );
       })}
@@ -132,7 +139,7 @@ const ResultItem = forwardRef((props, ref) => {
     onMouseDown,
     resultContainerStyle,
     selectedResultStyle,
-    onClick
+    onClick,
   } = props;
 
   const getClasses = () => {
@@ -145,7 +152,12 @@ const ResultItem = forwardRef((props, ref) => {
     );
   };
   return (
-    <div onMouseDown={onMouseDown} onClick={onClick }  ref={ref} className={getClasses()}>
+    <div
+      onMouseDown={onMouseDown}
+      onClick={onClick}
+      ref={ref}
+      className={getClasses()}
+    >
       {renderItem(item)}
     </div>
   );

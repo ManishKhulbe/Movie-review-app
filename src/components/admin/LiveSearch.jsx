@@ -19,6 +19,7 @@ const LiveSearch = ({
 }) => {
   const [displaySearch, setDisplaySearch] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [defaultValue,setDefaultValue]=useState('')
   const handleOnFocus = () => {
     if (results.length) setDisplaySearch(true);
   };
@@ -61,6 +62,15 @@ const LiveSearch = ({
       : commonInputClasses + "rounded border-2 p-1 text-lg";
   };
 
+  const handleChange=(e)=>{
+    setDefaultValue(e.target.value)
+    onChange && onChange(e)
+  }
+
+  useEffect(()=>{
+    if(value)setDefaultValue(value)
+  },[value])
+
   return (
     <div className="relative">
       <input
@@ -72,8 +82,8 @@ const LiveSearch = ({
         onFocus={handleOnFocus}
         onBlur={handleOnBlur}
         onKeyDown={handleKeyDown}
-        value={value}
-        onChange={onChange}
+        value={defaultValue}
+        onChange={handleChange}
       />
       <SearchResults
         results={results}

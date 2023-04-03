@@ -12,6 +12,8 @@ import CastModal from "../modals/CastModal";
 import PosterSelector from "./PosterSelector";
 import GenresSelector from "./GenresSelector";
 import GenresModals from "../modals/GenresModals";
+import Selector from "./Selector";
+import { languageOptions, statusOptions, typeOptions } from "../../utils/options";
 
 const results = [
   { id: "1", name: "mk" },
@@ -128,7 +130,7 @@ const MovieForm = () => {
     setMovieInfo({ ...movieInfo, cast: [...newCast] });
   };
 
-  const { title, storyLine, director, writers, cast, tags , genres } = movieInfo;
+  const { title, storyLine, director, writers, cast, tags , genres, type,language, status } = movieInfo;
  
   return (
     <>
@@ -218,6 +220,9 @@ const MovieForm = () => {
         <div className="w-[30%] space-y-5">
           <PosterSelector name='poster'  onChange={handleChange}  selectedPoster={selectedPosterForUI} accept='image/jpg , image/jpeg , image/png'/>
           <GenresSelector badge={genres.length} onClick={displayGenresModal}>Select Genres</GenresSelector>
+          <Selector onChange={handleChange} name="type" value={type} options={typeOptions} label="Type" />
+          <Selector onChange={handleChange} name="language" value={language} options={languageOptions} label="Language" />
+          <Selector onChange={handleChange} name="status" value={status} options={statusOptions} label="Status" />
         </div>
       </div>
       <WriterModals
@@ -233,6 +238,7 @@ const MovieForm = () => {
         onRemoveClick={handleCastRemove}
       />
       <GenresModals  onSubmit={updateGenres} visible={showGenresModal} onClose={hideGenresModal} previousSelection={genres}/>
+   
     </>
   );
 };

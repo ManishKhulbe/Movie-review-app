@@ -134,7 +134,7 @@ const MovieForm = () => {
  
   return (
     <>
-      <div className="flex space-x-3 ">
+      <div className="flex space-x-3 w-[45rem] h-[40rem] ">
         <div className="w-[70%] space-y-5 ">
           <div>
             <Label htmlFor="title">Title</Label>
@@ -218,7 +218,7 @@ const MovieForm = () => {
           <Submit value="Upload" onClick={handleSubmit} type="button" />
         </div>
         <div className="w-[30%] space-y-5">
-          <PosterSelector name='poster'  onChange={handleChange}  selectedPoster={selectedPosterForUI} accept='image/jpg , image/jpeg , image/png'/>
+          <PosterSelector    label='Select Poster' name='poster'  onChange={handleChange}  selectedPoster={selectedPosterForUI} accept='image/jpg , image/jpeg , image/png'/>
           <GenresSelector badge={genres.length} onClick={displayGenresModal}>Select Genres</GenresSelector>
           <Selector onChange={handleChange} name="type" value={type} options={typeOptions} label="Type" />
           <Selector onChange={handleChange} name="language" value={language} options={languageOptions} label="Language" />

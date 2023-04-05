@@ -1,10 +1,14 @@
 import React from 'react'
+import ActorModal from '../modals/ActorUploadModal'
+
 import MovieUpload from './MovieUpload'
 
-const Dashboard = () => {
+const Dashboard = ({showMovieUploadModal , hideMovieUploadModal , showActorUploadModal,hideActorUploadModal }) => {
   return (
-    <MovieUpload />
- 
+    <>
+    <ActorModal visible={showActorUploadModal } onClose={hideActorUploadModal} />
+    <MovieUpload visible={showMovieUploadModal} onClose={hideMovieUploadModal} />
+    </>
   )
 }
 

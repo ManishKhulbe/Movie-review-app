@@ -1,23 +1,26 @@
 import React, { useState } from "react";
 import { commonInputClasses } from "../../utils/theme";
 import LiveSearch from "../admin/LiveSearch";
-import { renderItem } from "../admin/MovieForm";
-import { useNotification } from "../hooks";
+import { renderItem } from "../../utils/helper";
+import { useNotification, useSearch } from "../hooks";
+import { searchActor } from "../../api/actor";
 
 const defaultCastInfo = {
   profile: {},
   roleAs: "",
   leadActor: false,
 };
-const results = [
-  { id: "1", name: "mk" },
-  { id: "2", name: "km" },
-];
+// const results = [
+//   { id: "1", name: "mk" },
+//   { id: "2", name: "km" },
+// ];
 const CastForm = ({onSubmit}) => {
   const [castInfo, setCastInfo] = useState({ ...defaultCastInfo });
+  const [profiles, setProfiles] = useState([])
   const { leadActor, profile, roleAs } = castInfo;
 
   const {updateNotification}= useNotification()
+  const {handleSearch,resetSearch} = useSearch()
   const handleOnChange = ({target}) => {
     const {checked , name , value}= target;
 
@@ -29,6 +32,7 @@ const CastForm = ({onSubmit}) => {
 
   const handleProfileSelect=(profile)=>{
     setCastInfo({...castInfo, profile });
+
   }
   const handleSubmit=()=>{
     const { profile, roleAs } = castInfo;
@@ -39,7 +43,18 @@ const CastForm = ({onSubmit}) => {
       return updateNotification('error',"Cast role is missing!")
     }
     onSubmit(castInfo);
-    setCastInfo({...defaultCastInfo});
+    setCastInfo({...defaultCastInfo, profile:{name:''}});
+    resetSearch()
+    setProfiles([])
+  }
+
+  const handleProfileChange=({target})=>{
+const {value} = target;
+const {profile} = castInfo
+profile.name= value;
+setCastInfo({...castInfo,...profile})
+console.log(profile)
+handleSearch(searchActor, value, setProfiles)
 
   }
   return (
@@ -55,9 +70,10 @@ const CastForm = ({onSubmit}) => {
       <LiveSearch
         placeholder="Search profile.."
         value={profile.name}
-        results={results}
+        results={profiles}
         renderItem={renderItem}
         onSelect={handleProfileSelect}
+        onChange={handleProfileChange}
       />
       <span className="dark:text-dark-subtle text-light-subtle font-semibold">
         as

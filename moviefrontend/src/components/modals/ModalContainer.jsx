@@ -2,7 +2,7 @@ import React from "react";
 
 const ModalContainer = ({ visible, children, ignoreContainer, onClose }) => {
   const handleClick = (e) => {
-    if (e.target.id === "modal-container") onClose();
+    if (e.target.id === "modal-container") onClose &&  onClose();
   };
 
   if (!visible) return null;
@@ -10,7 +10,7 @@ const ModalContainer = ({ visible, children, ignoreContainer, onClose }) => {
   const renderChildren = () => {
     if (ignoreContainer) return children;
     return (
-      <div className="dark:bg-primary bg-white rounded w-[45rem] h-[40rem] overflow-auto p-2 custom-scroll-bar">
+      <div className="dark:bg-primary bg-white rounded  overflow-auto p-2 custom-scroll-bar">
         {children}
       </div>
     );

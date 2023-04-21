@@ -1,7 +1,7 @@
 import React from "react";
 import TagsInput from "./TagsInput";
 import { commonInputClasses } from "../../utils/theme";
-import LiveSearch from "./LiveSearch";
+
 import { useState } from "react";
 import Submit from "../form/Submit";
 import { useNotification } from "../hooks";
@@ -12,24 +12,18 @@ import CastModal from "../modals/CastModal";
 import PosterSelector from "./PosterSelector";
 import GenresSelector from "./GenresSelector";
 import GenresModals from "../modals/GenresModals";
+import Selector from "./Selector";
+import {
+  languageOptions,
+  statusOptions,
+  typeOptions,
+} from "../../utils/options";
 
-const results = [
-  { id: "1", name: "mk" },
-  { id: "2", name: "km" },
-];
-
-export const renderItem = (result) => {
-  return (
-    <div key={result.id} className="flex space-x-2 rounded overflow-hidden">
-      <img
-        src={result.avatar}
-        alt={result.name}
-        className="w-16 h-16 object-cover"
-      />
-      <p className="dark:text-white font-semibold">{result.name}</p>
-    </div>
-  );
-};
+import Label from "../admin/Label";
+import ViewAllBtn from './ViewAllButton'
+import DirectorSelector from "./DirectorSelector";
+import WriterSelector from "./WriterSelector";
+import LabelWithBadge from "./LabelWithBadge";
 
 const defaultMovieInfo = {
   title: "",
@@ -49,25 +43,27 @@ const MovieForm = () => {
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
   const [showWritersModal, setWritersModal] = useState(false);
   const [showCastModal, setShowCastModal] = useState(false);
-  const [selectedPosterForUI, setSelectedPosterForUI] = useState('')
-  const [showGenresModal, setShowGenresModal] = useState(false)
-  
+  const [selectedPosterForUI, setSelectedPosterForUI] = useState("");
+  const [showGenresModal, setShowGenresModal] = useState(false);
+
   const { updateNotification } = useNotification();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(movieInfo);
   };
 
-  const updatePosterForUI =(poster)=>{
-    setSelectedPosterForUI(URL.createObjectURL(poster))
-  }
+  const updatePosterForUI = (poster) => {
+    setSelectedPosterForUI(URL.createObjectURL(poster));
+  };
   const handleChange = ({ target }) => {
-    const { value, name,files } = target;
-    if(name==='poster'){
+    const { value, name, files } = target;
+    if (name === "poster") {
       const poster = files[0];
-      updatePosterForUI(poster)
-      return setMovieInfo({ ...movieInfo,poster });
+      updatePosterForUI(poster);
+      return setMovieInfo({ ...movieInfo, poster });
     }
+    // if (name === "writers") return setWriterName(value);
     setMovieInfo({ ...movieInfo, [name]: value });
   };
 
@@ -83,7 +79,7 @@ const MovieForm = () => {
   };
   const updateGenres = (genres) => {
     return setMovieInfo({ ...movieInfo, genres });
-  }
+  };
   const updateWriters = (profile) => {
     const { writers } = movieInfo;
     for (let writer of writers) {
@@ -95,6 +91,7 @@ const MovieForm = () => {
       }
     }
     setMovieInfo({ ...movieInfo, writers: [...writers, profile] });
+
   };
   const hideWritersModal = () => {
     setWritersModal(false);
@@ -109,9 +106,9 @@ const MovieForm = () => {
   const displayCastModal = () => {
     setShowCastModal(true);
   };
-  const hideGenresModal=()=>{
-    setShowGenresModal(false)
-  }
+  const hideGenresModal = () => {
+    setShowGenresModal(false);
+  };
   const displayGenresModal = () => {
     setShowGenresModal(true);
   };
@@ -128,11 +125,23 @@ const MovieForm = () => {
     setMovieInfo({ ...movieInfo, cast: [...newCast] });
   };
 
-  const { title, storyLine, director, writers, cast, tags , genres } = movieInfo;
- 
+
+  const {
+    title,
+    storyLine,
+    
+    writers,
+    cast,
+    tags,
+    genres,
+    type,
+    language,
+    status,
+  } = movieInfo;
+
   return (
     <>
-      <div className="flex space-x-3 ">
+      <div className="flex space-x-3 w-[45rem] h-[40rem] ">
         <div className="w-[70%] space-y-5 ">
           <div>
             <Label htmlFor="title">Title</Label>
@@ -164,15 +173,7 @@ const MovieForm = () => {
             <TagsInput value={tags} name="tags" onChange={updateTags} />
           </div>
           <div>
-            <Label htmlFor="director">Director</Label>
-            <LiveSearch
-              name="director"
-              value={director.name}
-              results={results}
-              placeholder="Search Profile"
-              renderItem={renderItem}
-              onSelect={updateDirector}
-            />
+            <DirectorSelector onSelect={updateDirector} />
           </div>
           <div>
             <div className="flex justify-between">
@@ -186,13 +187,7 @@ const MovieForm = () => {
                 View all
               </ViewAllBtn>
             </div>
-            <LiveSearch
-              name="writers"
-              results={results}
-              placeholder="Search Profile"
-              renderItem={renderItem}
-              onSelect={updateWriters}
-            />
+            <WriterSelector onSelect={updateWriters} />
           </div>
           <div>
             <div className="flex justify-between">
@@ -211,13 +206,42 @@ const MovieForm = () => {
             type="date"
             className={commonInputClasses + " border-2 rounded p-1 w-auto"}
             onChange={handleChange}
-            name='releaseDate'
+            name="releaseDate"
           />
           <Submit value="Upload" onClick={handleSubmit} type="button" />
         </div>
         <div className="w-[30%] space-y-5">
-          <PosterSelector name='poster'  onChange={handleChange}  selectedPoster={selectedPosterForUI} accept='image/jpg , image/jpeg , image/png'/>
-          <GenresSelector badge={genres.length} onClick={displayGenresModal}>Select Genres</GenresSelector>
+          <PosterSelector
+            label="Select Poster"
+            name="poster"
+            onChange={handleChange}
+            selectedPoster={selectedPosterForUI}
+            accept="image/jpg , image/jpeg , image/png"
+          />
+          <GenresSelector badge={genres.length} onClick={displayGenresModal}>
+            Select Genres
+          </GenresSelector>
+          <Selector
+            onChange={handleChange}
+            name="type"
+            value={type}
+            options={typeOptions}
+            label="Type"
+          />
+          <Selector
+            onChange={handleChange}
+            name="language"
+            value={language}
+            options={languageOptions}
+            label="Language"
+          />
+          <Selector
+            onChange={handleChange}
+            name="status"
+            value={status}
+            options={statusOptions}
+            label="Status"
+          />
         </div>
       </div>
       <WriterModals
@@ -232,52 +256,14 @@ const MovieForm = () => {
         visible={showCastModal}
         onRemoveClick={handleCastRemove}
       />
-      <GenresModals  onSubmit={updateGenres} visible={showGenresModal} onClose={hideGenresModal} previousSelection={genres}/>
+      <GenresModals
+        onSubmit={updateGenres}
+        visible={showGenresModal}
+        onClose={hideGenresModal}
+        previousSelection={genres}
+      />
     </>
   );
 };
 
-
-const Label = ({ children, htmlFor }) => {
-  return (
-    <label
-      htmlFor={htmlFor}
-      className="dark:text-dark-subtle text-light-subtle font-semibold mr-3"
-    >
-      {" "}
-      {children}
-    </label>
-  );
-};
-
-const LabelWithBadge = ({ children, htmlFor, badge = 0 }) => {
-  console.log("🚀 ~ file: MovieForm.jsx:179 ~ LabelWithBadge ~ badge:", badge);
-  if (!badge) return null;
-  const renderBadge = () => {
-    return (
-      <span className="dark:bg-dark-subtle  bg-light-subtle text-white absolute top-0 right-0 w-5 h-5 translate-x-2 -translate-y-1 text-sm rounded-full flex justify-center items-center">
-        {+badge <= 9 ? badge : "9+"}
-      </span>
-    );
-  };
-  return (
-    <div className="relative">
-      <Label htmlFor={htmlFor}>{children}</Label>
-      {renderBadge()}
-    </div>
-  );
-};
-
-const ViewAllBtn = ({ visible, children, onClick }) => {
-  if (!visible) return null;
-  return (
-    <button
-      onClick={onClick}
-      type="button"
-      className="dark:text-white text-primary hover:underline transition"
-    >
-      {children}
-    </button>
-  );
-};
 export default MovieForm;

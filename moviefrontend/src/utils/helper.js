@@ -5,3 +5,27 @@ const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0
 return re.test(email) 
 
 }
+
+export const getToken =()=>{
+   return localStorage.getItem('auth-token')
+} 
+
+export const catchErrors=(error)=>{
+    const { response } = error;
+        if (response?.data) return response.data;
+    
+        return { error: error.message || error };
+}
+
+export const renderItem = (result) => {
+    return (
+      <div key={result.id} className="flex space-x-2 rounded overflow-hidden">
+        <img
+          src={result.avatar}
+          alt={result.name}
+          className="w-16 h-16 object-cover"
+        />
+        <p className="dark:text-white font-semibold">{result.name}</p>
+      </div>
+    );
+  };

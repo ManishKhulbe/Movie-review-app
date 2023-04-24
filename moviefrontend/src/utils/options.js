@@ -15,7 +15,7 @@ export const typeOptions = [
     { title: "Bengali", value: "Bengali" },
     { title: "Chinese", value: "Chinese" },
     { title: "English", value: "English" },
-    { title: "Fernch", value: "Fernch" },
+    { title: "French", value: "French" },
     { title: "German", value: "German" },
     { title: "Gujarati", value: "Gujarati" },
     { title: "Hindi", value: "Hindi" },

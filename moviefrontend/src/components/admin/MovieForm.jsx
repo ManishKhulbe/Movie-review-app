@@ -20,10 +20,11 @@ import {
 } from "../../utils/options";
 
 import Label from "../admin/Label";
-import ViewAllBtn from './ViewAllButton'
+import ViewAllBtn from "./ViewAllButton";
 import DirectorSelector from "./DirectorSelector";
 import WriterSelector from "./WriterSelector";
 import LabelWithBadge from "./LabelWithBadge";
+import { validateMovie } from "../../utils/validator";
 
 const defaultMovieInfo = {
   title: "",
@@ -39,7 +40,8 @@ const defaultMovieInfo = {
   language: "",
   status: "",
 };
-const MovieForm = () => {
+
+const MovieForm = ({ onSubmit , busy}) => {
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
   const [showWritersModal, setWritersModal] = useState(false);
   const [showCastModal, setShowCastModal] = useState(false);
@@ -50,7 +52,39 @@ const MovieForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(movieInfo);
+    const { error } = validateMovie(movieInfo);
+    if (error) return updateNotification("error", error);
+
+    const { tags, genres, cast, writers, director, poster } = movieInfo;
+    const formData = new FormData();
+    const finalMovieInfo = {
+      ...movieInfo,
+    };
+    finalMovieInfo.tags = JSON.stringify(tags);
+    finalMovieInfo.genres = JSON.stringify(genres);
+
+    const finalCast = cast.map((c) => {
+      return {
+        actor: c.profile.id,
+        roleAs:c.roleAs,
+        leadActor: c.leadActor
+      }
+    });
+    finalMovieInfo.cast = JSON.stringify(finalCast);
+
+    if (writers.length) {
+      const finalWriters = writers.map((w) => w.id);
+      finalMovieInfo.writers = JSON.stringify(finalWriters);
+    }
+    if (director) {
+      finalMovieInfo.director = JSON.stringify(director);
+    }
+    if (poster) finalMovieInfo.poster = poster;
+
+    for (let key in finalMovieInfo) {
+      formData.append(key, finalMovieInfo[key]);
+    }
+    onSubmit(formData);
   };
 
   const updatePosterForUI = (poster) => {
@@ -64,6 +98,7 @@ const MovieForm = () => {
       return setMovieInfo({ ...movieInfo, poster });
     }
     // if (name === "writers") return setWriterName(value);
+    console.log(name,value)
     setMovieInfo({ ...movieInfo, [name]: value });
   };
 
@@ -91,7 +126,6 @@ const MovieForm = () => {
       }
     }
     setMovieInfo({ ...movieInfo, writers: [...writers, profile] });
-
   };
   const hideWritersModal = () => {
     setWritersModal(false);
@@ -125,11 +159,9 @@ const MovieForm = () => {
     setMovieInfo({ ...movieInfo, cast: [...newCast] });
   };
 
-
   const {
     title,
     storyLine,
-    
     writers,
     cast,
     tags,
@@ -177,9 +209,9 @@ const MovieForm = () => {
           </div>
           <div>
             <div className="flex justify-between">
-              <LabelWithBadge htmlFor="writers" badge={writers.length}>
+             {writers.length ? <LabelWithBadge htmlFor="writers" badge={writers.length}>
                 Writers
-              </LabelWithBadge>
+              </LabelWithBadge> :  <Label htmlFor="writers">Writers</Label>}
               <ViewAllBtn
                 visible={writers.length}
                 onClick={displayWritersModal}
@@ -191,9 +223,9 @@ const MovieForm = () => {
           </div>
           <div>
             <div className="flex justify-between">
-              <LabelWithBadge badge={cast.length}>
+             {cast.length?  <LabelWithBadge badge={cast.length}>
                 Add Cast & Crew
-              </LabelWithBadge>
+              </LabelWithBadge>:  <Label htmlFor="cast"> Add Cast & Crew</Label>}
               <ViewAllBtn visible={cast.length} onClick={displayCastModal}>
                 View all
               </ViewAllBtn>
@@ -208,7 +240,7 @@ const MovieForm = () => {
             onChange={handleChange}
             name="releaseDate"
           />
-          <Submit value="Upload" onClick={handleSubmit} type="button" />
+          <Submit busy={busy} value="Upload" onClick={handleSubmit} type="button" />
         </div>
         <div className="w-[30%] space-y-5">
           <PosterSelector

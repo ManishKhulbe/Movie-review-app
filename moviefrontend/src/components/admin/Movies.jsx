@@ -2,7 +2,9 @@ import React from 'react'
 
  const Movies = () => {
   return (
-    <div>Movies</div>
+    <div className='bg-white shadow dark:bg-secondary'>
+      <h1>Total Uploads</h1>
+    </div>
   )
 }
 

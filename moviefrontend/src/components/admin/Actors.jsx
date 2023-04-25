@@ -1,25 +1,58 @@
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
+import { getActor } from "../../api/actor";
+import { useNotification } from "../hooks/index";
+import NextAndPrevButton from "../NextAndPrevButton";
+
+let currentPageNo=0;
+let limit= 2;
 
 const Actors = () => {
-  const profile={
-    avatar:"https://plus.unsplash.com/premium_photo-1682175064711-2e2870132d9c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0M3x8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60",
-    name:'john doe',
-    about:" Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident obcaecati deleniti dolores minus eligendi debitis in repudiandae at dignissimos odio fugiat minima, eveniet tenetur iste sunt ducimus numquam consequuntur! Optio."
+  const [actors, setActors] = useState([]);
+  const [reachedToEnd, setReactToEnd]  = useState(false)
+  const { updateNotification } = useNotification();
 
+  const fetchActors = async (pageNo, limit) => {
+    const { error, profiles } = await getActor(pageNo, limit);
+    if (error) return updateNotification("error", error);
+    if(!profiles.length){
+      currentPageNo= pageNo -1
+      return setReactToEnd(true)
+    }
+    setActors([...profiles]);
+  };
+
+  const handleOnNextClick=()=>{
+    if(reachedToEnd) return 
+    currentPageNo+=1
+    fetchActors(currentPageNo,limit)
   }
+  const handleOnPrevClick=()=>{
+    if(currentPageNo<=0) return 
+    currentPageNo-=1
+    fetchActors(currentPageNo,limit)
+  }
+
+  useEffect(() => {
+    fetchActors(currentPageNo,limit);
+  }, []);
   return (
-    <div className="grid grid-cols-4 gap-3 my-5">
-      <ActorProfile profile={profile} />
-     
+    <div className="p-5">
+    <div className="grid grid-cols-4 gap-5">
+      {actors.map((actor) => (
+        <ActorProfile profile={actor} key={actor.id} />
+      ))}
+    </div>
+      <NextAndPrevButton className='mt-5' onNextClick={handleOnNextClick} onPrevClick={handleOnPrevClick}/>
     </div>
   );
 };
 
 const ActorProfile = ({ profile }) => {
   const [showOptions, setShowOptions] = useState(false);
-
+  const acceptedNameLength= 15
   const handleOnMouseEnter = () => {
     setShowOptions(true);
   };
@@ -27,6 +60,11 @@ const ActorProfile = ({ profile }) => {
   const handleOnMouseLeave = () => {
     setShowOptions(false);
   };
+
+  const getName=(name)=>{
+    if(name.length<=acceptedNameLength) return name;
+    return name.substring(0, acceptedNameLength)+'..'
+  }
   if (!profile) return null;
   const { name, about = "", avatar } = profile;
   return (
@@ -42,8 +80,8 @@ const ActorProfile = ({ profile }) => {
           className="w-20 aspect-square object-cover"
         ></img>
         <div className="px-2">
-          <h1 className="text-xl text-primary dark:text-white font-semibold">
-            {name}
+          <h1 className="text-xl text-primary dark:text-white font-semibold whitespace-nowrap">
+            {getName(name)}
           </h1>
           <p className=" text-primary dark:text-white ">
             {about.substring(0, 50)}

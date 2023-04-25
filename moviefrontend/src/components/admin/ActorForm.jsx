@@ -4,7 +4,8 @@ import { commonInputClasses } from "../../utils/theme";
 import { useNotification } from "../hooks";
 import PosterSelector from "./PosterSelector";
 import Selector from "./Selector";
-import {ImSpinner3} from 'react-icons/im'
+import { ImSpinner3 } from "react-icons/im";
+import { useEffect } from "react";
 
 const defaultActorInfo = {
   name: "",
@@ -20,7 +21,7 @@ const genderOptions = [
 ];
 
 const validateActor = ({ name, about, avatar, gender }) => {
-  console.log("🚀 ~ file: ActorForm.jsx:22 ~ validateActor ~ gender:", gender)
+  console.log("🚀 ~ file: ActorForm.jsx:22 ~ validateActor ~ gender:", gender);
   if (!name.trim()) return { error: "Actor name is missing" };
   if (!about.trim()) return { error: "About is missing" };
   if (!gender.trim()) return { error: "Gender is missing" };
@@ -29,7 +30,7 @@ const validateActor = ({ name, about, avatar, gender }) => {
 
   return { error: null };
 };
-const ActorForm = ({ title, btnTitle,busy,onSubmit }) => {
+const ActorForm = ({ title, btnTitle, busy, onSubmit, initialState }) => {
   const [actorInfo, setActorInfo] = useState({ ...defaultActorInfo });
   const [selectedAvatarForUI, setSelectedAvatarForUI] = useState("");
   const { updateNotification } = useNotification();
@@ -42,14 +43,14 @@ const ActorForm = ({ title, btnTitle,busy,onSubmit }) => {
       const file = files[0];
       updatePosterForUI(file);
       setActorInfo({ ...actorInfo, avatar: file });
-    }else{
+    } else {
       setActorInfo({ ...actorInfo, [name]: value });
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-console.log(actorInfo,"actorInfo")
+    console.log(actorInfo, "actorInfo");
     const { error } = validateActor(actorInfo);
     if (error) return updateNotification("error", error);
     const formData = new FormData();
@@ -60,6 +61,12 @@ console.log(actorInfo,"actorInfo")
     onSubmit(formData);
   };
 
+  useEffect(() => {
+    if (initialState) {
+      setActorInfo({ ...initialState, avatar: null });
+      setSelectedAvatarForUI(initialState.avatar)
+    }
+  }, [initialState]);
   const { name, about, gender } = actorInfo;
   return (
     <form
@@ -74,7 +81,7 @@ console.log(actorInfo,"actorInfo")
           className="h-8 w-24 bg-primary text-white dark:bg-white dark:text-primary hover:opacity-80 transition rounded flex items-center justify-center"
           type="submit"
         >
-          {busy ? <ImSpinner3 className="animate-spin"/>  : btnTitle}
+          {busy ? <ImSpinner3 className="animate-spin" /> : btnTitle}
         </button>
       </div>
       <div className="flex space-x-2 mb-3">

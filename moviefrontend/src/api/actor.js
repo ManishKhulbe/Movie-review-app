@@ -45,3 +45,19 @@ export const getActor = async (pageNo, limit) => {
     return catchErrors(error);
   }
 };
+
+
+export const updateMovieActor = async (id,formData) => {
+  const token = getToken();
+  try {
+    const { data } = await client.put(`/actor/update/${id}`, formData, {
+      headers: {
+        authorization: "Bearer " + token,
+        "content-type": "multipart/form-data",
+      },
+    });
+    return data;
+  } catch (error) {
+    return catchErrors(error);
+  }
+};

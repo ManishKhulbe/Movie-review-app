@@ -2,57 +2,123 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
-import { getActor } from "../../api/actor";
-import { useNotification } from "../hooks/index";
+import { getActor, searchActor } from "../../api/actor";
+import { useNotification, useSearch } from "../hooks/index";
 import NextAndPrevButton from "../NextAndPrevButton";
-
-let currentPageNo=0;
-let limit= 2;
+import UpdateActor from "../modals/UpdateActor";
+import AppSearchForm from "../form/AppSearchForm";
+let currentPageNo = 0;
+let limit = 2;
 
 const Actors = () => {
   const [actors, setActors] = useState([]);
-  const [reachedToEnd, setReactToEnd]  = useState(false)
+  const [results, setResults] = useState([]);
+  const [reachedToEnd, setReactToEnd] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(null);
   const { updateNotification } = useNotification();
+  const { handleSearch, resetSearch } = useSearch();
 
   const fetchActors = async (pageNo, limit) => {
     const { error, profiles } = await getActor(pageNo, limit);
     if (error) return updateNotification("error", error);
-    if(!profiles.length){
-      currentPageNo= pageNo -1
-      return setReactToEnd(true)
+    if (!profiles.length) {
+      currentPageNo = pageNo - 1;
+      return setReactToEnd(true);
     }
     setActors([...profiles]);
   };
 
-  const handleOnNextClick=()=>{
-    if(reachedToEnd) return 
-    currentPageNo+=1
-    fetchActors(currentPageNo,limit)
-  }
-  const handleOnPrevClick=()=>{
-    if(currentPageNo<=0) return 
-    currentPageNo-=1
-    fetchActors(currentPageNo,limit)
-  }
+  const handleOnNextClick = () => {
+    if (reachedToEnd) return;
+    currentPageNo += 1;
+    fetchActors(currentPageNo, limit);
+  };
+  const handleOnPrevClick = () => {
+    if (currentPageNo <= 0) {
+      setReactToEnd(false);
+      return;
+    }
+    currentPageNo -= 1;
+    fetchActors(currentPageNo, limit);
+  };
+  const handleOnEditClick = (profile) => {
+    setSelectedProfile(profile);
+    setShowUpdateModal(true);
+  };
+  const hideUpdateModal = () => {
+    setShowUpdateModal(false);
+  };
+  const handleOnActorUpdate = (profile) => {
+    const updatedActors = actors.map((actor) => {
+      if (actor.id === profile.id) {
+        return profile;
+      }
+      return actor;
+    });
+    setActors([...updatedActors]);
+  };
 
+  const handleOnSearchSubmit = (value) => {
+    handleSearch(searchActor, value, setResults);
+  };
+  const handleSearchFormReset=()=>{
+    resetSearch()
+    setResults([])
+  }
   useEffect(() => {
-    fetchActors(currentPageNo,limit);
+    fetchActors(currentPageNo, limit);
+    // eslint-disable-next-line
   }, []);
   return (
-    <div className="p-5">
-    <div className="grid grid-cols-4 gap-5">
-      {actors.map((actor) => (
-        <ActorProfile profile={actor} key={actor.id} />
-      ))}
-    </div>
-      <NextAndPrevButton className='mt-5' onNextClick={handleOnNextClick} onPrevClick={handleOnPrevClick}/>
-    </div>
+    <>
+      <div className="p-5">
+        <div className="flex justify-end mb-5">
+          <AppSearchForm
+            placeholder="Search Actors.."
+            onSubmit={handleOnSearchSubmit}
+            showResetButton={results.length}
+            onReset={handleSearchFormReset}
+          />
+        </div>
+        <div className="grid grid-cols-4 gap-5">
+          {results.length
+            ? results.map((actor) => (
+                <ActorProfile
+                  profile={actor}
+                  key={actor.id}
+                  onEditClick={() => handleOnEditClick(actor)}
+                />
+              ))
+            : actors.map((actor) => (
+                <ActorProfile
+                  profile={actor}
+                  key={actor.id}
+                  onEditClick={() => handleOnEditClick(actor)}
+                />
+              ))}
+        </div>
+        {!results.length ?  (
+          <NextAndPrevButton
+            className="mt-5"
+            onNextClick={handleOnNextClick}
+            onPrevClick={handleOnPrevClick}
+          />
+        ): null}
+      </div>
+      <UpdateActor
+        visible={showUpdateModal}
+        onClose={hideUpdateModal}
+        initialState={selectedProfile}
+        onSuccess={handleOnActorUpdate}
+      />
+    </>
   );
 };
 
-const ActorProfile = ({ profile }) => {
+const ActorProfile = ({ profile, onEditClick }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const acceptedNameLength= 15
+  const acceptedNameLength = 15;
   const handleOnMouseEnter = () => {
     setShowOptions(true);
   };
@@ -61,10 +127,10 @@ const ActorProfile = ({ profile }) => {
     setShowOptions(false);
   };
 
-  const getName=(name)=>{
-    if(name.length<=acceptedNameLength) return name;
-    return name.substring(0, acceptedNameLength)+'..'
-  }
+  const getName = (name) => {
+    if (name.length <= acceptedNameLength) return name;
+    return name.substring(0, acceptedNameLength) + "..";
+  };
   if (!profile) return null;
   const { name, about = "", avatar } = profile;
   return (
@@ -83,11 +149,11 @@ const ActorProfile = ({ profile }) => {
           <h1 className="text-xl text-primary dark:text-white font-semibold whitespace-nowrap">
             {getName(name)}
           </h1>
-          <p className=" text-primary dark:text-white ">
+          <p className=" text-primary dark:text-white opacity-60">
             {about.substring(0, 50)}
           </p>
         </div>
-        <Options visible={showOptions} />
+        <Options onEditClick={onEditClick} visible={showOptions} />
       </div>
     </div>
   );

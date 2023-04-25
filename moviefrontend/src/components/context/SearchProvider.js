@@ -25,8 +25,12 @@ const SearchProvider = ({children}) => {
         const {error, results} = await method(query)
         console.log("🚀 ~ file: SearchProvider.js:26 ~ search ~ results:", results)
         if(error) return updateNotification('error', error)
-        if(!results.length) return setResultNotFound(true)
-        
+        if(!results.length){ 
+            setResults([])
+            updaterFunc && updaterFunc([])
+            return setResultNotFound(true)
+        }
+        setResultNotFound(false)
         setResults(results)
         updaterFunc && updaterFunc([...results])
     }
@@ -41,7 +45,7 @@ const SearchProvider = ({children}) => {
         setSearching(true)
         if(!query.trim()){
             updaterFunc([])
-            resetSearch()
+           return resetSearch()
         }
         debounceFunc(method, query , updaterFunc)
 

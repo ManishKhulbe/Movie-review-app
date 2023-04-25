@@ -22,7 +22,6 @@ export const searchActor = async (query) => {
     const { data } = await client.get(`/actor/search?name=${query}`, {
       headers: {
         authorization: "Bearer " + token,
-        "content-type": "multipart/form-data",
       },
     });
     return data;
@@ -54,6 +53,21 @@ export const updateMovieActor = async (id,formData) => {
       headers: {
         authorization: "Bearer " + token,
         "content-type": "multipart/form-data",
+      },
+    });
+    return data;
+  } catch (error) {
+    return catchErrors(error);
+  }
+};
+
+
+export const deleteActor = async (id) => {
+  const token = getToken();
+  try {
+    const { data } = await client.delete(`/actor/${id}`, {
+      headers: {
+        authorization: "Bearer " + token
       },
     });
     return data;

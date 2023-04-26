@@ -5,11 +5,13 @@ import { getMovies } from "../../api/movie";
 import { useNotification } from "../hooks";
 import MovieListItems from "./MovieListItems";
 import NextAndPrevButton from "../NextAndPrevButton";
+import UpdateMovie from "../modals/UpdateMovie";
 let currentPageNo = 0;
 let limit = 10;
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [reachedToEnd, setReactToEnd] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false)
   const { updateNotification } = useNotification();
 
   const fetchMovies = async (pageNo) => {
@@ -37,15 +39,23 @@ const Movies = () => {
     fetchMovies(currentPageNo, limit);
   };
 
+  const handleOnEditClick=(movie)=>{
+    setShowUpdateModal(true)
+  }
+  const handleOnDeleteClick=(movie)=>{
+
+  }
+
   useEffect(() => {
     fetchMovies(currentPageNo);
     // eslint-disable-next-line
   }, []);
 
   return (
+    <>
     <div className="space-y-3 p-5">
       {movies.map((movie) => (
-        <MovieListItems movie={movie} />
+        <MovieListItems movie={movie} onEditClick={()=>handleOnEditClick(movie)} onDeleteClick={()=>handleOnDeleteClick(movie)} />
       ))}
 
       <NextAndPrevButton
@@ -54,6 +64,8 @@ const Movies = () => {
         onPrevClick={handleOnPrevClick}
       />
     </div>
+    <UpdateMovie visible={showUpdateModal}/>
+    </>
   );
 };
 

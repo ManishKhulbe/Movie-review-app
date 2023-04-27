@@ -7,16 +7,17 @@ import { useRef } from "react";
 import { useTheme } from "../hooks";
 import AppSearchForm from "../form/AppSearchForm";
 
-
-const Header = ({onAddMovieClick , onAddActorClick}) => {
+const Header = ({ onAddMovieClick, onAddActorClick }) => {
   const [showOptions, setShowOptions] = useState(false);
   const { toggleTheme } = useTheme();
-  const options = [{title : "Add Movie" , onClick : onAddMovieClick },
-  {title : "Add Actor" , onClick : onAddActorClick }];
+  const options = [
+    { title: "Add Movie", onClick: onAddMovieClick },
+    { title: "Add Actor", onClick: onAddActorClick },
+  ];
 
   return (
     <div className="flex items-center justify-between relative p-5 ">
-      <AppSearchForm placeholder='search movies..' />
+      <AppSearchForm placeholder="search movies.." />
       <div className="flex items-center space-x-3">
         <button
           onClick={toggleTheme}
@@ -68,11 +69,10 @@ const CreateOptions = ({ options, visible, onClose }) => {
     e.target.classList.remove("animate-scale");
   };
 
-
-  const handleClick=(fn)=>{
-fn()
-onClose()
-  }
+  const handleClick = (fn) => {
+    fn();
+    onClose();
+  };
   if (!visible) return null;
   return (
     <div
@@ -81,8 +81,12 @@ onClose()
       className="absolute right-0 top-12 z-50 flex flex-col space-y-5 p-5 dark:bg-secondary bg-white drop-shadow-lg rounded animate-scale"
       onAnimationEnd={handleAnimationEnd}
     >
-      {options.map(({title, onClick}) => {
-        return <Option key={title} onClick={()=>handleClick(onClick)}>{title} </Option>;
+      {options.map(({ title, onClick }) => {
+        return (
+          <Option key={title} onClick={() => handleClick(onClick)}>
+            {title}{" "}
+          </Option>
+        );
       })}
     </div>
   );

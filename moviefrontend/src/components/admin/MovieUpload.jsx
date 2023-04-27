@@ -52,14 +52,18 @@ const MovieUpload = ({ visible, onClose }) => {
       setBusy(true)
     movieInfo.append("trailer", JSON.stringify(videoInfo));
     console.log(movieInfo);
-    const res = await uploadMovie(movieInfo);
-    console.log("🚀 ~ file: MovieUpload.jsx:58 ~ handleSubmit ~ res:", res)
+    const {error,movie} = await uploadMovie(movieInfo);
+    if(error) {
+      updateNotification('error', error)
+      setBusy(false)
+    }
+    updateNotification('success',`Movie ${movie.title} Uploaded successfully`)
     setBusy(false)
-    // onClose()
+    onClose()
   };
 
   return (
-    <ModalContainer visible={visible}>
+    <ModalContainer visible={visible} onClose={onClose}>
       <div className="mb-5">
       <UploadProgress
         visible={!videoUploaded && videoSelected}
@@ -76,7 +80,7 @@ const MovieUpload = ({ visible, onClose }) => {
           />
         </>
       ) : (
-        <MovieForm busy={busy} onSubmit={!busy ? handleSubmit : null } />
+        <MovieForm btnTitle="Upload" busy={busy} onSubmit={!busy ? handleSubmit : null } />
       )}
     </ModalContainer>
   );

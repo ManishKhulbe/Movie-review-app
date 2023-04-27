@@ -5,16 +5,16 @@ import Actors from "./components/admin/Actors";
 import NotFound from "./components/NotFound";
 import AdminHome from "./components/pages/AdminHome";
 import Home from "./components/admin/Home";
+import SearchMovies from "./components/admin/SearchMovies";
 
 const adminRouter = createBrowserRouter([
-  
   {
     path: "/",
     element: <AdminHome />,
-    children:[
+    children: [
       {
-        path :"/",
-        element : <Home/>
+        path: "/",
+        element: <Home />,
       },
       {
         path: "/movies",
@@ -24,14 +24,16 @@ const adminRouter = createBrowserRouter([
         path: "/actors",
         element: <Actors />,
       },
-     
-    ]
+      {
+        path: "/search",
+        element: <SearchMovies />,
+      },
+    ],
   },
   {
     path: "*",
     element: <NotFound />,
-  }
-
+  },
 ]);
 
 export default adminRouter;

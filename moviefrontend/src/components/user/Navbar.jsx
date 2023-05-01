@@ -9,7 +9,7 @@ export default function Navbar() {
   const { authInfo, handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
   return (
-    <div className="bg-secondary shadow-sm shadow-gray-500 ">
+    <div className="bg-secondary shadow-sm shadow-gray-500 p-2 ">
       <Container className="  p-2">
         <div className="flex justify-between items-center">
           <Link to="/">

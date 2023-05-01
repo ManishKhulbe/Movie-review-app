@@ -7,8 +7,8 @@ import ForgetPassword from "./components/auth/ForgetPassword";
 import ConfirmPassword from "./components/auth/ConfirmPassword";
 import Auth from "./components/pages/Auth";
 import NotFound from "./components/NotFound";
-
-
+import SingleMovie from "./components/user/SingleMovie";
+import Movie from "./components/user/Movie";
 
 const router = createBrowserRouter([
   {
@@ -42,8 +42,18 @@ const router = createBrowserRouter([
       {
         path: "resetPassword",
         element: <ConfirmPassword />,
-      }
+      },
     ],
+  },
+  {
+    path: "/movie",
+    element: <Movie/>,
+    children:[
+      {
+        path: "/movie/:movieId",
+        element: <SingleMovie />,
+      }
+    ]
   },
 ]);
 

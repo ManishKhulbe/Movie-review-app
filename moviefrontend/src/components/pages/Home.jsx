@@ -12,12 +12,14 @@ const Home = () => {
     <>
       <Navbar />
       <div className="dark:bg-primary bg-white min-h-screen">
-        <Container>
+        <Container className={" "}>
           <NotVerified />
           <HeroSlideShow/>
+          <div className="space-y-3 py-8">
           <TopRatedMovies />
           <TopRatedWebSeries/>
           <TopRatedTvSeries />
+          </div>
         </Container>
       </div>
     </>

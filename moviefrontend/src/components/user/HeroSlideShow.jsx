@@ -96,6 +96,7 @@ const HeroSlideShow = () => {
     if (slides.length > 1 && visible) startSlideShow();
     else pauseSlideShow();
     updateUpNext(count);
+    // eslint-disable-next-line
   }, [slides.length, visible]);
 
   useEffect(() => {
@@ -108,6 +109,7 @@ const HeroSlideShow = () => {
         handleOnVisibilityChange
       );
     };
+    // eslint-disable-next-line
   }, []);
 
   return (

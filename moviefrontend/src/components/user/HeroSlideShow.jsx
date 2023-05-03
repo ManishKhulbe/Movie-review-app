@@ -27,18 +27,16 @@ const HeroSlideShow = () => {
 
   const updateUpNext = (currentIndex) => {
     if (!slides.length) return;
-    const upNextCount = currentIndex + 1;
+    const upNextCount = currentIndex+1 ;
     const end = upNextCount + 3;
-
     let newSlides = [...slides];
-    newSlides.slice(upNextCount, end);
-
-    if (!newSlides.length) {
-      newSlides = [...slides].slice(0, 3);
-    }
-
-    setUpNext([...newSlides]);
+    console.log("🚀 ~ file: HeroSlideShow.jsx:33 ~ updateUpNext ~ newSlides:", newSlides)
+    let newSlides1 = newSlides.slice(upNextCount, end);
+    console.log("🚀 ~ file: HeroSlideShow.jsx:34 ~ updateUpNext ~ newSlides1:", newSlides1)
+  
+    setUpNext([...newSlides1]);
   };
+console.log(count)
 
   const handleOnNextClick = () => {
     pauseSlideShow();
@@ -49,6 +47,8 @@ const HeroSlideShow = () => {
       count
     );
     setCurrentSlide(slides[count]);
+
+    // console.log(clonedSlideRef.current)
 
     clonedSlideRef.current.classList.add("slide-out-to-left");
 
@@ -71,7 +71,7 @@ const HeroSlideShow = () => {
   const handleAnimationEnd = () => {
     const classes = [
       "slide-out-to-left",
-      " slide-in-from-right",
+      "slide-in-from-right",
       "slide-out-to-right",
       "slide-in-from-left",
     ];

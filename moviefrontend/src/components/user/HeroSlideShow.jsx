@@ -17,8 +17,8 @@ const HeroSlideShow = () => {
   const clonedSlideRef = useRef();
   const { updateNotification } = useNotification();
 
-  const fetchLatestUploads = async () => {
-    const { error, movies } = await getLatestUploads();
+  const fetchLatestUploads = async (signal) => {
+    const { error, movies } = await getLatestUploads(signal);
 
     if (error) return updateNotification("error", error);
     setSlides([...movies]);
@@ -102,7 +102,8 @@ const HeroSlideShow = () => {
   }, [slides.length, visible]);
 
   useEffect(() => {
-    fetchLatestUploads();
+    const ac = new AbortController()
+    fetchLatestUploads(ac.signal);
     document.addEventListener("visibilitychange", handleOnVisibilityChange);
     return () => {
       pauseSlideShow();
@@ -110,6 +111,7 @@ const HeroSlideShow = () => {
         "visibilitychange",
         handleOnVisibilityChange
       );
+      ac.abort();
     };
     // eslint-disable-next-line
   }, []);

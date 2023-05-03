@@ -17,6 +17,13 @@ const MovieUpload = ({ visible, onClose }) => {
     updateNotification("error", error);
   };
 
+  const resetState=()=>{
+    setVideoSelected(false);
+    setVideoUploaded(false);
+    setUploadProgress(0);
+    setVideoInfo({})
+  }
+
   const handleUploadTrailer = async (formData) => {
     const { error, url, public_id } = await uploadTrailer(
       formData,
@@ -54,11 +61,12 @@ const MovieUpload = ({ visible, onClose }) => {
     console.log(movieInfo);
     const {error,movie} = await uploadMovie(movieInfo);
     if(error) {
-      updateNotification('error', error)
       setBusy(false)
+     return updateNotification('error', error)
     }
-    updateNotification('success',`Movie ${movie.title} Uploaded successfully`)
     setBusy(false)
+    updateNotification('success',`Movie ${movie.title} Uploaded successfully`)
+    resetState()
     onClose()
   };
 
@@ -95,10 +103,10 @@ const TrailerSelector = ({ visible, handleChange, onTypeError }) => {
         onTypeError={onTypeError}
         types={["mp4", "avi"]}
       >
-        <div className="w-48 h-48 border border-dashed dark:border-dark-subtle border-light-subtle rounded-full flex flex-col dark:text-dark-subtle  text-secondary  items-center justify-center cursor-pointer ">
+        <label className="w-48 h-48 border border-dashed dark:border-dark-subtle border-light-subtle rounded-full flex flex-col dark:text-dark-subtle  text-secondary  items-center justify-center cursor-pointer ">
           <AiOutlineCloudUpload size={80} />
           <p>Drop your file here</p>
-        </div>
+        </label>
       </FileUploader>
     </div>
   );

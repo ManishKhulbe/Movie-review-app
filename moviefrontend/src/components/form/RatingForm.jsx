@@ -2,16 +2,20 @@ import React from "react";
 
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import Submit from "./Submit";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const ratings = new Array(10).fill("");
+const createArray = (count) => {
+  return new Array(count).fill("");
+};
 
-const RatingForm = ({busy, onsubmit }) => {
+const ratings = createArray(10)
+
+const RatingForm = ({ busy, inititalState, onsubmit }) => {
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [content, setContent] = useState("");
 
   const handleMouseEnter = (index) => {
-    const ratings = new Array(index + 1).fill("");
+    const ratings =createArray(index+1);
     setSelectedRatings([...ratings]);
   };
 
@@ -28,14 +32,23 @@ const RatingForm = ({busy, onsubmit }) => {
     onsubmit(data);
   };
 
+  useEffect(() => {
+    if (inititalState) {
+      setContent(inititalState.content);
+      setSelectedRatings(createArray(inititalState.rating) );
+    }
+  }, [inititalState]);
   return (
-    <div >
+    <div>
       <div className="p-5 dark:bg-primary bg-white rounded space-y-3">
         <div className="dark:text-highlight-dark text-highlight flex items-center relative">
-        <StarsOutlined ratings={ratings} onMouseEnter={handleMouseEnter}/>
+          <StarsOutlined ratings={ratings} onMouseEnter={handleMouseEnter} />
 
           <div className="dark:text-highlight-dark text-highlight flex absolute items-center top-1/2 -translate-y-1/2">
-          <StarsFilled ratings={selectedRatings} onMouseEnter={handleMouseEnter}/>
+            <StarsFilled
+              ratings={selectedRatings}
+              onMouseEnter={handleMouseEnter}
+            />
           </div>
         </div>
 
@@ -50,7 +63,7 @@ const RatingForm = ({busy, onsubmit }) => {
   );
 };
 
-const StarsOutlined = ({ ratings ,onMouseEnter }) => {
+const StarsOutlined = ({ ratings, onMouseEnter }) => {
   return ratings.map((_, index) => {
     return (
       <AiOutlineStar

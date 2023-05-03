@@ -9,6 +9,7 @@ import Auth from "./components/pages/Auth";
 import NotFound from "./components/NotFound";
 import SingleMovie from "./components/user/SingleMovie";
 import Movie from "./components/user/Movie";
+import MovieReviews from "./components/user/MovieReviews";
 
 const router = createBrowserRouter([
   {
@@ -47,13 +48,23 @@ const router = createBrowserRouter([
   },
   {
     path: "/movie",
-    element: <Movie/>,
-    children:[
+    element: <Movie />,
+    children: [
       {
         path: "/movie/:movieId",
         element: <SingleMovie />,
-      }
-    ]
+      },
+    ],
+  },
+  {
+    path: "/movie/reviews",
+    element: <Movie />,
+    children: [
+      {
+        path: "/movie/reviews/:movieId",
+        element: <MovieReviews />,
+      },
+    ],
   },
 ]);
 

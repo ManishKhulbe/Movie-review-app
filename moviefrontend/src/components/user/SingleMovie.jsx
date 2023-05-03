@@ -1,16 +1,16 @@
-import React, { Children } from "react";
+import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSingleMovie } from "../../api/movie";
 import { useNotification } from "../hooks";
 import { useAuth } from "../hooks";
-import { Link } from "react-router-dom";
 import Container from "../Container";
 import RatingStar from "../RatingStar";
 import RelatedMovie from "../RelatedMovie";
 import AddRatingModal from "../modals/AddRatingModal";
 import CustomButtonLink from "../CustomButtonLink";
+import ProfileModal from "../modals/ProfileModal";
 
 const convertReviewCount = (reviewCount) => {
   if (!reviewCount) return 0;
@@ -25,6 +25,8 @@ const SingleMovie = () => {
   const [ready, setReady] = useState(false);
   const [movie, setMovie] = useState({});
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(false);
   const { movieId } = useParams();
   const { updateNotification } = useNotification();
   const { authInfo } = useAuth();
@@ -49,6 +51,14 @@ const SingleMovie = () => {
   const handleOnRatingSuccess = (reviews) => {
     setMovie({ ...movie, reviews: { ...reviews } });
   };
+  const handleProfileClick= (profile)=>{
+    setSelectedProfile(profile)
+    setShowProfileModal(true)
+  }
+
+  const hideProfileModal= ()=>{
+    setShowProfileModal(false)
+  }
   useEffect(() => {
     if (movieId) fetchMovie();
     // eslint-disable-next-line
@@ -111,7 +121,7 @@ const SingleMovie = () => {
             </p>
 
             <ListWithLabel label="Director">
-              <CustomButtonLink label={director.name} />
+              <CustomButtonLink label={director.name} onClick={()=>handleProfileClick(director)} />
             </ListWithLabel>
 
             <ListWithLabel label="Writers">
@@ -156,6 +166,11 @@ const SingleMovie = () => {
           </div>
         </Container>
 
+              <ProfileModal 
+                visible={showProfileModal}
+                onClose={hideProfileModal}
+                profileId={selectedProfile.id}
+                />
         <AddRatingModal
           visible={showRatingModal}
           onClose={hideRatingModal}

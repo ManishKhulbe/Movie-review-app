@@ -1,5 +1,5 @@
 import React from "react";
-import logoImg from "../../images/logo.jpg";
+import logoImg from "../../images/icons8-hotstar.svg";
 import { BsFillSunFill } from "react-icons/bs";
 import Container from "../Container";
 import { Link } from "react-router-dom";

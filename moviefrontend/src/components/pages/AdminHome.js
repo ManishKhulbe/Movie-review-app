@@ -31,6 +31,8 @@ const AdminHome = () => {
      </div>
     </div>
     <Dashboard hideMovieUploadModal={hideMovieUploadModal} showMovieUploadModal={showMovieUploadModal} hideActorUploadModal={hideActorUploadModal} showActorUploadModal={showActorUploadModal}/>
+
+
     </>
   )
 }

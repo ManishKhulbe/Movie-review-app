@@ -28,7 +28,7 @@ const MovieListItem = ({ movie }) => {
   };
   return (
     <Link to={`/movie/${id}`}>
-      <img className="aspect-video object-cover" src={getPoster(responsivePosters) ||poster} alt={title}></img>
+      <img className="aspect-video object-cover w-full" src={getPoster(responsivePosters) ||poster} alt={title}></img>
       <h1
         className="text-lg dark:text-white text-secondary font-semibold"
         title={title}

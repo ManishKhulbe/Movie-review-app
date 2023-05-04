@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef, forwardRef } from "react";
 import { getLatestUploads } from "../../api/movie";
 import { useNotification } from "../hooks";
 import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
-import {Link} from 'react-router-dom';
-
+import { Link } from "react-router-dom";
 
 let count = 0;
 let interValId;
+let newTime = 0;
+let lastTime = 0;
 const HeroSlideShow = () => {
   const [currentSlide, setCurrentSlide] = useState({});
   const [slides, setSlides] = useState([]);
@@ -27,18 +28,25 @@ const HeroSlideShow = () => {
 
   const updateUpNext = (currentIndex) => {
     if (!slides.length) return;
-    const upNextCount = currentIndex+1 ;
+    const upNextCount = currentIndex + 1;
     const end = upNextCount + 3;
     let newSlides = [...slides];
-    console.log("🚀 ~ file: HeroSlideShow.jsx:33 ~ updateUpNext ~ newSlides:", newSlides)
+    console.log(
+      "🚀 ~ file: HeroSlideShow.jsx:33 ~ updateUpNext ~ newSlides:",
+      newSlides
+    );
     let newSlides1 = newSlides.slice(upNextCount, end);
-    console.log("🚀 ~ file: HeroSlideShow.jsx:34 ~ updateUpNext ~ newSlides1:", newSlides1)
-  
+    console.log(
+      "🚀 ~ file: HeroSlideShow.jsx:34 ~ updateUpNext ~ newSlides1:",
+      newSlides1
+    );
+
     setUpNext([...newSlides1]);
   };
-console.log(count)
+  console.log(count);
 
   const handleOnNextClick = () => {
+    lastTime = Date.now();
     pauseSlideShow();
     setCloneSlide(slides[count]);
     count = (count + 1) % slides.length;
@@ -47,13 +55,15 @@ console.log(count)
       count
     );
     setCurrentSlide(slides[count]);
-
     // console.log(clonedSlideRef.current)
-
     clonedSlideRef.current.classList.add("slide-out-to-left");
 
     slideRef.current.classList.add("slide-in-from-right");
-    console.log("🚀 ~ file: HeroSlideShow.jsx:56 ~ handleOnNextClick ~ slideRef.current.classList:", slideRef.current.classList)
+    console.log(
+      "🚀 ~ file: HeroSlideShow.jsx:56 ~ handleOnNextClick ~ slideRef.current.classList:",
+      slideRef.current.classList
+    );
+   
     updateUpNext(count);
   };
 
@@ -82,7 +92,12 @@ console.log(count)
   };
 
   const startSlideShow = () => {
-    interValId = setInterval(handleOnNextClick, 3500);
+    interValId = setInterval(() => {
+      newTime = Date.now();
+      const delta = (newTime = lastTime);
+      if(delta<4000) return clearInterval(interValId)
+      handleOnNextClick();
+    }, 3500);
   };
   const pauseSlideShow = () => {
     clearInterval(interValId);
@@ -90,7 +105,10 @@ console.log(count)
 
   const handleOnVisibilityChange = () => {
     const visibility = document.visibilityState;
-    if (visibility === "hidden") setVisible(false);
+    if (visibility === "hidden") {
+      setVisible(false);
+      pauseSlideShow();
+    }
     if (visibility === "visible") setVisible(true);
   };
 
@@ -102,7 +120,7 @@ console.log(count)
   }, [slides.length, visible]);
 
   useEffect(() => {
-    const ac = new AbortController()
+    const ac = new AbortController();
     fetchLatestUploads(ac.signal);
     document.addEventListener("visibilitychange", handleOnVisibilityChange);
     return () => {
@@ -119,7 +137,7 @@ console.log(count)
   return (
     <div className="w-full flex ">
       {/* slide show section-=========== */}
-      <div className="w-4/5 aspect-video relative overflow-hidden">
+      <div className="md:w-4/5 w-full aspect-video relative overflow-hidden">
         {/* current slide */}
         <Slide
           ref={slideRef}
@@ -144,7 +162,7 @@ console.log(count)
       </div>
 
       {/* up next section============= */}
-      <div className="w-1/5 space-y-3 px-3 ">
+      <div className="w-1/5 md:block hidden space-y-3 px-3 ">
         <h1 className="font-semibold text-2xl text-primary dark:text-white">
           Up Next
         </h1>
@@ -179,9 +197,14 @@ const SlideShowController = ({ onPrevClick, onNextClick }) => {
 };
 
 const Slide = forwardRef((props, ref) => {
-  const { src, id ,title, className = "", ...rest } = props;
+  const { src, id, title, className = "", ...rest } = props;
   return (
-    <Link to={'/movie/'+ id} ref={ref} className={"w-full cursor-pointer block " + className} {...rest}>
+    <Link
+      to={"/movie/" + id}
+      ref={ref}
+      className={"w-full cursor-pointer block " + className}
+      {...rest}
+    >
       {src ? (
         <img
           //   onAnimationEnd={handleAnimationEnd}

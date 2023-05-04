@@ -4,6 +4,7 @@ import { BsFillSunFill } from "react-icons/bs";
 import Container from "../Container";
 import { Link } from "react-router-dom";
 import { useAuth, useTheme } from "../hooks";
+import AppSearchForm from "../form/AppSearchForm";
 export default function Navbar() {
   const { toggleTheme } = useTheme();
   const { authInfo, handleLogout } = useAuth();
@@ -13,23 +14,19 @@ export default function Navbar() {
       <Container className="  p-2">
         <div className="flex justify-between items-center">
           <Link to="/">
-            <img src={logoImg} alt="logo" className="h-10" />
+            <img src={logoImg} alt="logo" className="sm:h-10 h-8" />
           </Link>
-          <ul className="flex items-center space-x-4">
+          <ul className="flex items-center sm:space-x-4 space-x-2">
             <li>
               <button
                 onClick={toggleTheme}
-                className="dark:bg-white bg-dark-subtle p-1 rounded"
+                className="dark:bg-white bg-dark-subtle p-1 rounded sm:text-2xl text-lg"
               >
                 <BsFillSunFill className="text-secondary" />{" "}
               </button>
             </li>
             <li>
-              <input
-                type="text"
-                className="border-2 border-dark-subtle p-1 rounded text-xl bg-transparent outline-none focus:border-white transition "
-                placeholder="search.."
-              />
+              <AppSearchForm placeholder='Search' inputClassName='border-dark-subtle text-white focus:border-white sm:w-auto w-40 sm:text-lg'/>
             </li>
             <li>
               {isLoggedIn ? (

@@ -10,6 +10,7 @@ import NotFound from "./components/NotFound";
 import SingleMovie from "./components/user/SingleMovie";
 import Movie from "./components/user/Movie";
 import MovieReviews from "./components/user/MovieReviews";
+import SearchMovies from "./components/user/SearchMovies";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
     path: "/movie",
     element: <Movie />,
     children: [
+      {
+        path: "search",
+        element: <SearchMovies />,
+      },
       {
         path: "/movie/:movieId",
         element: <SingleMovie />,

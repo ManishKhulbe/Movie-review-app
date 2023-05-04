@@ -148,3 +148,12 @@ export const getRelatedMovie = async (id) => {
     return catchErrors(error);
   }
 };
+
+export const searchPublicMovie = async (title) => {
+  try {
+    const { data } = await client('/movie/search-public?title='+ title);
+    return data;
+  } catch (error) {
+    return catchErrors(error);
+  }
+};

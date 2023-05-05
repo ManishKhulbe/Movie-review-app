@@ -2,13 +2,19 @@ import React from "react";
 import logoImg from "../../images/icons8-hotstar.svg";
 import { BsFillSunFill } from "react-icons/bs";
 import Container from "../Container";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth, useTheme } from "../hooks";
 import AppSearchForm from "../form/AppSearchForm";
 export default function Navbar() {
   const { toggleTheme } = useTheme();
   const { authInfo, handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
+const navigate = useNavigate()
+
+  const handleSearchSubmit=(query)=>{
+    navigate(`/movie/search?title=${query}`)
+  }
+  
   return (
     <div className="bg-secondary shadow-sm shadow-gray-500 p-2 ">
       <Container className="  p-2">
@@ -26,7 +32,7 @@ export default function Navbar() {
               </button>
             </li>
             <li>
-              <AppSearchForm placeholder='Search' inputClassName='border-dark-subtle text-white focus:border-white sm:w-auto w-40 sm:text-lg'/>
+              <AppSearchForm placeholder='Search' inputClassName='border-dark-subtle text-white focus:border-white sm:w-auto w-40 sm:text-lg' onSubmit={handleSearchSubmit}/>
             </li>
             <li>
               {isLoggedIn ? (

@@ -19,7 +19,7 @@ const ModalContainer = ({ visible, children, ignoreContainer, onClose }) => {
     <div
       onClick={handleClick}
       id="modal-container"
-      className="fixed inset-0 dark:bg-white dark:bg-opacity-50 bg-primary bg-opacity-50 backdrop-blur-sm flex items-center justify-center"
+      className="fixed inset-0 dark:bg-white dark:bg-opacity-50 bg-primary bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
     >
       {renderChildren()}
     </div>

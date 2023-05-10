@@ -7,7 +7,9 @@ import TopRatedWebSeries from "../user/TopRatedWebSeries";
 import TopRatedTvSeries from "../user/TopRatedTvSeries";
 import HeroSlideShow from "../user/HeroSlideShow";
 
+
 const Home = () => {
+
   return (
     <>
       <Navbar />

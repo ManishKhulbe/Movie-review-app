@@ -8,7 +8,9 @@ import {useAuth} from "./components/hooks"
 
 function App() {
   const {authInfo} = useAuth()
+ 
   const isAdmin = authInfo?.profile?.role === "admin"
+
 
   if(isAdmin) {
     return (
@@ -16,7 +18,8 @@ function App() {
         <RouterProvider router={adminRouter} />
       </ContextProviders>
     )
-  }else{
+  }
+
     return (
       <>
         <ContextProviders>
@@ -24,7 +27,7 @@ function App() {
         </ContextProviders>
       </>
     );
-  }
+  
 }
 
 export default App;

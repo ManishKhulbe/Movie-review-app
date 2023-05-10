@@ -35,6 +35,7 @@ const Signin = () => {
   }; 
 
 const navigate = useNavigate()
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { status, error } = validateUserInfo(userInfo);
@@ -43,7 +44,7 @@ const navigate = useNavigate()
     
     handleLogin(userInfo.email, userInfo.password)
 
-    navigate('/')
+    navigate('/');
   };
 
 

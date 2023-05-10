@@ -31,11 +31,12 @@ export const AuthProvider = ({ children }) => {
     setAuthInfo({
       profile: { ...user },
       isPending: false,
-      isLoggedIn: false,
+      isLoggedIn: true,
       error: "",
     });
 
     localStorage.setItem("auth-token", user.token);
+    window.location.reload();
   };
 
   const isAuth = async () => {
@@ -59,6 +60,7 @@ export const AuthProvider = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
     setAuthInfo({ ...defaultAuthInfo });
+    window.location.reload();
   };
 
   useEffect(() => {

@@ -5,7 +5,11 @@ import Container from "../Container";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth, useTheme } from "../hooks";
 import AppSearchForm from "../form/AppSearchForm";
+import { useState } from "react";
+import ConfirmModal from "../modals/ConfirmModal";
 export default function Navbar() {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [busy, setBusy] = useState(false);
   const { toggleTheme } = useTheme();
   const { authInfo, handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
@@ -14,8 +18,23 @@ const navigate = useNavigate()
   const handleSearchSubmit=(query)=>{
     navigate(`/movie/search?title=${query}`)
   }
+
+  const handleLogoutModal=()=>{
+    setShowConfirmModal(true)
+  }
+  const hideConfirmModal=()=>{
+    setShowConfirmModal(false)
+  }
+  const handleOnLogOutConfirm=()=>{
+    setBusy(true)
+    handleLogout()
+    setBusy(false)
+    hideConfirmModal()
+  }
+
   
   return (
+    <>
     <div className="bg-secondary shadow-sm shadow-gray-500 p-2 ">
       <Container className="  p-2">
         <div className="flex justify-between items-center">
@@ -36,7 +55,7 @@ const navigate = useNavigate()
             </li>
             <li>
               {isLoggedIn ? (
-                <button className="font-semibold text-lg" onClick={handleLogout}> Log Out </button>
+                <button className="font-semibold text-lg" onClick={handleLogoutModal}> Log Out </button>
               ) : (
                 <Link to="auth/signin" className="font-semibold text-lg">
                   Login
@@ -47,5 +66,17 @@ const navigate = useNavigate()
         </div>
       </Container>
     </div>
+      <ConfirmModal
+        visible={showConfirmModal}
+        title="Are you sure you want to logout?"
+        subtitle="You can always login again."
+        busy={busy}
+        onConfirm={handleOnLogOutConfirm}
+        onCancel={hideConfirmModal}
+      />
+      
+      </>
+
+
   );
 }

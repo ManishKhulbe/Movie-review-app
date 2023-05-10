@@ -12,7 +12,7 @@ const ConfirmModal = ({
 }) => {
   const commonClasses = "px-3 py-1 text-white ";
   return (
-    <ModalContainer visible={visible} ignoreContainer>
+    <ModalContainer visible={visible} className={'z-10'} ignoreContainer>
       <div className="dark:bg-primary bg-white rounded p-3 ">
         <h1 className="text-red-400 font-semibold text-lg">{title}</h1>
         <p className="text-secondary dark:text-white text-sm">{subtitle}</p>

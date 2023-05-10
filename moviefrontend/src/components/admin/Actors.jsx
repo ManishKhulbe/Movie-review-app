@@ -10,7 +10,7 @@ import AppSearchForm from "../form/AppSearchForm";
 import NotFoundText from "../NotFoundText";
 import ConfirmModal from "../modals/ConfirmModal";
 let currentPageNo = 0;
-let limit = 2;
+let limit = 20;
 
 const Actors = () => {
   const [actors, setActors] = useState([]);

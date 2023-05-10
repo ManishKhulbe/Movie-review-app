@@ -30,7 +30,7 @@ let timeOutId;
   return (
     <NotificationContext.Provider value={{ updateNotification }}>
       {children}
-     {notification && <div className="fixed left-1/2 -translate-x-1/2 top-24 rounded ">
+     {notification && <div className="fixed left-1/2 -translate-x-1/2 top-24 rounded  ">
         <div
           className={
             classes + " bounce-custom shadow-md shadow-gray-400 "
